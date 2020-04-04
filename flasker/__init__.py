@@ -15,6 +15,13 @@ def create_app(test_config=None):
         response.headers.add("Access-Control-Allow-Methods","GET,PATCH,DELETE,POST,OPTIONS")
         return response 
     
+    '''
+            PLANTS ENDPOINT
+    '''
+    
+    '''
+    Get All Plants 
+    '''
     @app.route('/plants' , methods=['GET','POST'])
     def get_plants():
         page = request.args.get('page',1,type=int)
@@ -28,10 +35,16 @@ def create_app(test_config=None):
             'total_plants':len(formated_plants)
         })
     
-    
-    @app.route('/smiley')
-    def smiley():
-        return ':)'
+    '''
+    Get Specific Plant 
+    '''
+    @app.route('/plants/<int:plant_id>')
+    def get_specific_plant(plant_id):
+        plant = Plant.query.filter(Plant.id == plant_id).one_or_none()
+        return jsonify({
+            'success':True , 
+            'plant':plant.format()
+        })
     
     
     # if test_config == None:
