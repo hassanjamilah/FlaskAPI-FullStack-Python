@@ -1,4 +1,4 @@
-from flask import Flask , jsonify , request
+from flask import Flask , jsonify , request , abort
 from flask_cors import CORS
 from flasker.models import setup_db , Plant
 import os 
@@ -41,10 +41,13 @@ def create_app(test_config=None):
     @app.route('/plants/<int:plant_id>')
     def get_specific_plant(plant_id):
         plant = Plant.query.filter(Plant.id == plant_id).one_or_none()
-        return jsonify({
-            'success':True , 
-            'plant':plant.format()
-        })
+        if plant == None:
+            abort(404)
+        else:
+            return jsonify({
+                'success':True , 
+                'plant':plant.format()
+            })
     
     
     # if test_config == None:
